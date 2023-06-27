@@ -11,7 +11,7 @@ const NavBar: FC<NavBarProps> = () => {
     setShowMenu((prevState) => !prevState);
   }
   return (
-    <div className="bg-white nav-bar relative h-[65px]">
+    <div className="bg-white opacity-80 nav-bar relative h-[65px]">
       <div className="flex justify-between w-[92%] mx-auto">
         <div className="w-16">
           <Logo />
