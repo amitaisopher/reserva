@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 
 const EventCard: FC<Event> = ({location, name, startTime, endTime, description, id}) => {
-    const navigate = useNavigate()
+  startTime = startTime instanceof Date ? startTime : new Date(startTime)  
+  endTime = endTime instanceof Date ? endTime : new Date(endTime)  
+  const navigate = useNavigate()
     function showMoreButtonHandler(e, eventId: string) {
         navigate(`/event/${eventId}`)
     }
