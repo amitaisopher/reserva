@@ -20,3 +20,19 @@ export async function getEventsList() {
         console.error(error)
     }
 }
+
+
+export async function createEvent(data: object) {
+    const config: AxiosRequestConfig = {
+        method: "POST",
+        maxBodyLength: Infinity,
+        baseURL: `${getBaseURLForEnvironment()}/api/v1`,
+        url: '/event',
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data
+    }
+    return await axios.request(config)
+}

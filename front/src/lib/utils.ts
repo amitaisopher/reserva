@@ -6,6 +6,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getBaseURLForEnvironment() {
-    // return process.env.environment === 'DEV' ? 'http://localhost:8000' : 'https://something-secured'
-    return 'http://localhost:8000'
+    console.log(`Base URL from .env: ${import.meta.env.VITE_BACKEND_BASE_URL}`)
+    return import.meta.env.VITE_BACKEND_BASE_URL
 }

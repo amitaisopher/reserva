@@ -46,6 +46,12 @@ router.route('/events').get((req: Request, res: Response) => {
     res.send(data)
 })
 
+router.route('/event').post((req: Request, res: Response) => {
+    const event = req.body
+    data.push(event)
+    res.send()
+})
+
 router.route('/event/:eventId').get((req: Request, res: Response) => {
     const { eventId } = req.params
     const event = data.find(item => item.id === eventId)
