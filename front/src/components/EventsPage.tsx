@@ -1,9 +1,10 @@
 import { FC, useEffect, useState, createContext, useContext } from 'react'
 import EventsList from '@/components/EventsList'
-import { AddEventDialog } from '@/components/AddEventDialog'
-import { getEventsList } from '@/lib/api'
+import { EventDialog } from '@/components/EventDialog'
+import { createEvent, getEventsList } from '@/lib/api'
 import type { Event } from '@/types/event'
 import { SocketIoContext } from '@/lib/socket'
+import { Button } from '@/components/Button'
 
 
 export const eventListContext = createContext(null)
@@ -27,7 +28,9 @@ const EventsPage: FC = () => {
   }, [])
   return <div>
     <eventListContext.Provider value={{updateEventList}}>
-      <AddEventDialog/>
+      <EventDialog submitHandlerFunction={createEvent} dialogTitle='New Item' dialogDescription='Add new item to inventory'>
+        <Button variant={"default"}>Add item</Button>
+      </EventDialog>
       <EventsList events={eventsData}/>
     </eventListContext.Provider>
   </div>

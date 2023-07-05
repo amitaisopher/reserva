@@ -36,3 +36,18 @@ export async function createEvent(data: object) {
     }
     return await axios.request(config)
 }
+
+export async function updateEvent(data: object) {
+    const config: AxiosRequestConfig = {
+        method: "PUT",
+        maxBodyLength: Infinity,
+        baseURL: `${getBaseURLForEnvironment()}/api/v1`,
+        url: `/event/${data.id}`,
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data
+    }
+    return await axios.request(config)
+}

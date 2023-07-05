@@ -1,7 +1,9 @@
 import { FC } from "react";
 import { Event } from "@/types/event";
-import { MapPinIcon } from "lucide-react";
+import { MapPinIcon, Edit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { EventDialog } from "./EventDialog";
+import { updateEvent } from "@/lib/api";
 
 
 const EventCard: FC<Event> = ({location, name, startTime, endTime, description, id}) => {
@@ -12,8 +14,11 @@ const EventCard: FC<Event> = ({location, name, startTime, endTime, description, 
         navigate(`/event/${eventId}`)
     }
     return (
-    <div className="w-full mx-auto min-w-[360px] max-w-[450px] bg-black/20 hover:bg-black/40 text-white backdrop-blur-[32px] rounded-[32px] py-12 px-6">
+    <div className="group relative w-full mx-auto min-w-[360px] max-w-[450px] bg-black/20 hover:bg-black/40 text-white backdrop-blur-[32px] rounded-[32px] py-12 px-6">
       {/* card top */}
+      <EventDialog submitHandlerFunction={updateEvent} eventData={{location, name, startTime, endTime, description, id}} dialogTitle="Edit Item" dialogDescription="Edit and update existing item">
+        <Edit className="absolute top-4 right-8 text-2xl hidden group-hover:block cursor-pointer hover:text-slate-200" />
+      </EventDialog>
       <div className="my-5 flex flex-col gap-10">
         <div className="flex justify-center">
           <div className="text-[32px] leading-none font-light">{name}</div>

@@ -13,12 +13,12 @@ import {
 } from "@/components/Dialog";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/Input";
-import { createEvent } from "@/lib/api";
-import { Button } from "@/components/Button";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { SocketIoContext } from "@/lib/socket";
+import { AxiosResponse } from "axios";
 
 type FormValues = {
+  id: string,
   name: string;
   description: string;
   location: string;
@@ -26,15 +26,42 @@ type FormValues = {
   endTime: Date;
 };
 
-export const AddEventDialog: FC = () => {
+// type submitHandlerFunction = (data: object) => Promise<AxiosResponse<any, any>>
+
+interface EventData {
+  id: string;
+  name: string;
+  description: string;
+  location: string;
+  startTime: Date;
+  endTime: Date;
+}
+
+interface EventDialogProps {
+  dialogTitle?: string;
+  dialogDescription?: string;
+  eventData?: EventData
+  children: React.ReactNode;
+  submitHandlerFunction: (data: object) => Promise<AxiosResponse<any, any>>;
+}
+
+export const EventDialog: FC<EventDialogProps> = ({submitHandlerFunction, eventData={
+  id: "",
+  name: "",
+  description: "",
+  location: "",
+  startTime: new Date(),
+  endTime: new Date()
+}, children, dialogTitle, dialogDescription}) => {
   const socket = useContext(SocketIoContext)
   const form = useForm<FormValues>({
     defaultValues: {
-      name: "",
-      description: "",
-      location: "",
-      startTime: new Date(),
-      endTime: new Date(),
+      id: eventData.id,
+      name: eventData.name,
+      description: eventData.description,
+      location: eventData.location,
+      startTime: eventData.startTime,
+      endTime: eventData.endTime,
     },
   });
   const { register, control, handleSubmit, formState, reset } = form;
@@ -45,17 +72,17 @@ export const AddEventDialog: FC = () => {
     try {
       data = { ...data, ...{ paymentMethods: [{ type: "cash" }] } };
       console.log("Form data: ", data);
-      const response = await createEvent(data);
-      console.log(JSON.stringify(response.data));
+      // const response = await createEvent(data);
+      const response = await submitHandlerFunction(data);
       toast({
-        title: "Successfully added",
+        title: "Operation completed successfully",
       });
       setOpen(false);
       reset();
       socket.emit('EventAdded')
     } catch (error) {
       toast({
-        title: "Failed to add",
+        title: "Operation failed",
         description: `${error?.message}`,
         variant: "destructive",
       });
@@ -65,13 +92,13 @@ export const AddEventDialog: FC = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={"default"}>Add item</Button>
+        {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[450px]">
         <form noValidate onSubmit={handleSubmit(submitHandler)}>
           <DialogHeader>
-            <DialogTitle>New Item</DialogTitle>
-            <DialogDescription>Add new item to inventory</DialogDescription>
+            <DialogTitle>{dialogTitle}</DialogTitle>
+            <DialogDescription>{dialogDescription}</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">

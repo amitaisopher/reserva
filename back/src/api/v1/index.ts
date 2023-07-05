@@ -1,5 +1,6 @@
 import express, { Response, Request } from "express";
 import { errorHandlerMiddleware } from "@/middleware/errorHandling";
+import { v4 as uuidv4 } from 'uuid';
 
 const router = express.Router()
 router.use(errorHandlerMiddleware)
@@ -48,18 +49,31 @@ router.route('/events').get((req: Request, res: Response) => {
 
 router.route('/event').post((req: Request, res: Response) => {
     const event = req.body
-    data.push(event)
+    data.push({ ...event, id: uuidv4() })
     res.send()
 })
 
-router.route('/event/:eventId').get((req: Request, res: Response) => {
-    const { eventId } = req.params
-    const event = data.find(item => item.id === eventId)
-    if (event) {
-        res.send(event)
-    } else {
-        res.status(404).send()
+router.route('/event/:eventId')
+    .get((req: Request, res: Response) => {
+        const { eventId } = req.params
+        const event = data.find(item => item.id === eventId)
+        if (event) {
+            res.send(event)
+        } else {
+            res.status(404).send()
+        }
+    })
+    .put((req: Request, res: Response) => {
+        const { eventId } = req.params
+        const updatedEvent = req.body
+        const index = data.findIndex(item => item.id === eventId)
+        if (index == -1) {
+            res.status(404).send()
+        } else {
+            data[index] = updatedEvent
+            res.send()
+        }
     }
-})
+    )
 
 export default router

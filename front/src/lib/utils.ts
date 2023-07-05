@@ -6,6 +6,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getBaseURLForEnvironment() {
-    console.log(`Base URL from .env: ${import.meta.env.VITE_BACKEND_BASE_URL}`)
     return import.meta.env.VITE_BACKEND_BASE_URL
 }
